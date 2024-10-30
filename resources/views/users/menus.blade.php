@@ -249,7 +249,7 @@
                         </figure>
                         <div class="card-body">
                             <h3 class="title-small">
-                                <a href="{{ route('products.chitiet') }}" class="card-link">
+                                <a href="{{ route('users.chitiet') }}" class="card-link">
                                     Món Ăn
                                 </a>    
                             </h3>
@@ -272,7 +272,7 @@
                         </figure>
                         <div class="card-body">
                             <h3 class="title-small">
-                                <a href="{{ route('products.chitiet') }}" class="card-link">
+                                <a href="{{ route('users.chitiet') }}" class="card-link">
                                     Món Ăn
                                 </a>    
                             </h3>
@@ -295,7 +295,7 @@
                         </figure>
                         <div class="card-body">
                             <h3 class="title-small">
-                                <a href="{{ route('products.chitiet') }}" class="card-link">
+                                <a href="{{ route('users.chitiet') }}" class="card-link">
                                     Món Ăn
                                 </a>    
                             </h3>
@@ -318,7 +318,7 @@
                         </figure>
                         <div class="card-body">
                             <h3 class="title-small">
-                                <a href="{{ route('products.chitiet') }}" class="card-link">
+                                <a href="{{ route('users.chitiet') }}" class="card-link">
                                     Món Ăn
                                 </a>    
                             </h3>
@@ -348,7 +348,7 @@
                         </figure>
                         <div class="card-body">
                             <h3 class="title-small">
-                                <a href="{{ route('products.chitiet') }}" class="card-link">
+                                <a href="{{ route('users.chitiet') }}" class="card-link">
                                     Món Ăn
                                 </a>    
                             </h3>
@@ -399,7 +399,7 @@
                         </figure>
                         <div class="card-body">
                             <h3 class="title-small">
-                                <a href="{{ route('products.chitiet') }}" class="card-link">
+                                <a href="{{ route('users.chitiet') }}" class="card-link">
                                     Món Ăn
                                 </a>
 
