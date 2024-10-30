@@ -26,7 +26,7 @@
           </li>
 
           <li class="navbar-item">
-            <a href="{{ route('products.menus') }}" class="navbar-link hover-underline">
+            <a href="{{ route('users.menus') }}" class="navbar-link hover-underline">
               <div class="separator"></div>
 
               <span class="span">Menus</span>
