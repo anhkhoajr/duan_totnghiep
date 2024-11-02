@@ -9,40 +9,45 @@ class ProductsTableSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('products')->insert([
+        // Dữ liệu mẫu
+        $products = [
             [
-                'users_id' => 2, // ID của người dùng (users)
-                'categories_id' => 1, // ID của danh mục (categories)
-                'name' => 'Spaghetti',
-                'img' => 'spaghetti.jpg',
+                'name' => 'Gỏi bông điên điển tép đồng',
+                'img' => 'Goi-bong-dien-dien-tep-dong.jpg',
                 'description' => 'Delicious spaghetti with tomato sauce',
-                'sale_price' => 10.50,
-                'price' => 12.00,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'sale_price' => 229000, // Đã bỏ dấu phân cách
+                'price' => 219000, // Đã bỏ dấu phân cách
             ],
             [
-                'users_id' => 2,
-                'categories_id' => 2,
-                'name' => 'Coke',
-                'img' => 'coke.jpg',
+                'name' => 'Hủ tiếu sa tế',
+                'img' => 'Hu-tieu-sa-tế-thumbnail.jpg',
                 'description' => 'Refreshing soft drink',
-                'sale_price' => 1.50,
-                'price' => 2.00,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'sale_price' => 85000, // Đã bỏ dấu phân cách
+                'price' => 75000, // Đã bỏ dấu phân cách
             ],
             [
-                'users_id' => 2,
-                'categories_id' => 3,
-                'name' => 'Cheesecake',
-                'img' => 'cheesecake.jpg',
+                'name' => 'Chả giò tôm thịt',
+                'img' => 'Cha-gio-tom-thit.jpg',
                 'description' => 'Creamy cheesecake with strawberries',
-                'sale_price' => 4.50,
-                'price' => 5.00,
+                'sale_price' => 189000, // Đã bỏ dấu phân cách
+                'price' => 179000, // Đã bỏ dấu phân cách
+            ],
+            // Thêm các sản phẩm khác ở đây
+        ];
+
+        // Tạo sản phẩm từ mảng
+        foreach ($products as $product) {
+            DB::table('products')->insert([
+                'users_id' => 2, // ID của người dùng (users)
+                'categories_id' => rand(1, 3), // Giả định bạn có 3 danh mục
+                'name' => $product['name'],
+                'img' => $product['img'],
+                'description' => $product['description'],
+                'sale_price' => $product['sale_price'], 
+                'price' => $product['price'], 
                 'created_at' => now(),
                 'updated_at' => now(),
-            ],
-        ]);
+            ]);
+        }
     }
 }

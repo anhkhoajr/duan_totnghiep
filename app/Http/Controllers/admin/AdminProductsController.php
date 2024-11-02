@@ -13,16 +13,6 @@ use Illuminate\Support\Facades\DB;
 class AdminProductsController extends Controller
 {
     // Hiển thị danh sách sản phẩm
-    public function product(Request $request)
-    {
-        // Lấy danh sách sản phẩm từ cơ sở dữ liệu và tìm kiếm
-        $search = $request->query('search');
-        $products = Product::when($search, function ($query) use ($search) {
-            return $query->where('name', 'like', '%' . $search . '%');
-        })->get();
-
-        return view('admin.productlist', compact('products'));
-    }
     public function products(Request $request)
     {
         $search = $request->input('search');
@@ -31,7 +21,7 @@ class AdminProductsController extends Controller
         })->with(['user', 'category']) // Nạp dữ liệu liên quan
           ->paginate(10); // Số sản phẩm trên mỗi trang (thay đổi theo nhu cầu)
     
-        return view('admin.productlist', compact('products'));
+        return view('admin.product_list', compact('products'));
     }
     
     // Hiển thị form thêm sản phẩm
@@ -40,7 +30,7 @@ class AdminProductsController extends Controller
         // Lấy danh sách danh mục từ cơ sở dữ liệu
         $categories = Category::all(); // Giả sử bạn đã có model Category
     
-        return view('admin.addproduct', compact('categories')); // Truyền danh sách danh mục vào view
+        return view('admin.product_add', compact('categories')); // Truyền danh sách danh mục vào view
     }
     
 
@@ -51,8 +41,8 @@ class AdminProductsController extends Controller
             'img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'categories_id' => 'required|exists:categories,id',
             'price' => 'required|numeric',
-            'sale_price' => 'nullable|numeric', // Thêm validation cho sale_price
-            'description' => 'nullable|string',
+            'sale_price' => 'nullable|numeric',
+            'description' => 'nullable|string', // Cho phép description có thể NULL
         ]);
     
         // Logic lưu sản phẩm vào cơ sở dữ liệu
@@ -61,7 +51,7 @@ class AdminProductsController extends Controller
         $product->categories_id = $request->categories_id;
         $product->price = $request->price;
         $product->sale_price = $request->sale_price; // Gán giá trị sale_price
-        $product->description = $request->description;
+        $product->description = $request->description; // Gán giá trị description (có thể NULL)
         $product->users_id = auth()->id();
     
         // Xử lý ảnh sản phẩm
@@ -77,6 +67,7 @@ class AdminProductsController extends Controller
         return redirect()->route('admin.productlist')->with('success', 'Sản phẩm đã được thêm thành công.');
     }
     
+    
 
     // Hiển thị form chỉnh sửa sản phẩm
     public function edit($id)
@@ -84,7 +75,7 @@ class AdminProductsController extends Controller
         $product = Product::findOrFail($id); // Lấy sản phẩm theo ID
         $categories = Category::all(); // Lấy tất cả danh mục
     
-        return view('admin.editproduct', compact('product', 'categories')); // Truyền sản phẩm và danh mục vào view
+        return view('admin.product_edit', compact('product', 'categories')); // Truyền sản phẩm và danh mục vào view
     }
 
     // Cập nhật sản phẩm
@@ -137,9 +128,6 @@ class AdminProductsController extends Controller
     }
     
     
-    
-    
-
     // Xóa sản phẩm
     public function destroy($id)
     {
