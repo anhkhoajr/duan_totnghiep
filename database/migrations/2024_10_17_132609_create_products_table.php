@@ -9,25 +9,23 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-// CreateProductsTable.php
-public function up()
-{
-    Schema::create('products', function (Blueprint $table) {
-        $table->id(); // PK
-        $table->foreignId('users_id')->constrained('users')->onDelete('cascade'); // FK
-        $table->foreignId('categories_id')->constrained('categories')->onDelete('cascade'); // FK
-        $table->string('name');
-        $table->string('img')->nullable();
-        $table->text('description');
-        $table->decimal('sale_price', 10, 2);
-        $table->decimal('price', 10, 2);
-        $table->timestamps();
-    });
-}
+    public function up()
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id(); // PK
+            $table->foreignId('users_id')->constrained('users')->onDelete('cascade'); // FK
+            $table->foreignId('categories_id')->constrained('categories')->onDelete('cascade'); // FK
+            $table->string('name');
+            $table->string('img')->nullable(); // Hình ảnh có thể NULL
+            $table->text('description')->nullable(); // Thay đổi để cho phép NULL
+            $table->decimal('sale_price', 10, 2)->nullable(); // Giảm giá có thể NULL
+            $table->decimal('price', 10, 2);
+            $table->timestamps();
+        });
+    }
 
-public function down()
-{
-    Schema::dropIfExists('products');
-}
-
+    public function down()
+    {
+        Schema::dropIfExists('products');
+    }
 };
