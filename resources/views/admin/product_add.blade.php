@@ -5,6 +5,8 @@
     <h3 class="title-page">Thêm sản phẩm</h3>
     <form class="addPro" action="{{ route('admin.storeproduct') }}" method="POST" enctype="multipart/form-data">
         @csrf
+        <input type="hidden" name="user_id" value="{{ auth()->user()->id }}"> <!-- Thêm trường user_id -->
+
         <div class="form-group">
             <label for="exampleInputFile">Ảnh sản phẩm</label>
             <div class="custom-file">
@@ -21,14 +23,14 @@
         </div>
         <div class="form-group">
             <label for="categories">Danh mục:</label>
-            <select class="form-select" name="categories_id" aria-label="Default select example" required>
+            <select class="form-select" name="category_id" aria-label="Default select example" required>
                 <option value="">Chọn danh mục</option>
                 @foreach($categories as $item)
                 <option value="{{$item->id}}">{{$item->name}}</option>
                 @endforeach
             </select>
-            @if ($errors->has('categories_id'))
-                <span class="text-danger">{{ $errors->first('categories_id') }}</span>
+            @if ($errors->has('category_id'))
+                <span class="text-danger">{{ $errors->first('category_id') }}</span>
             @endif
         </div>
         <div class="form-group">
@@ -67,5 +69,14 @@
             <a href="{{ route('admin.productlist') }}" class="btn btn-secondary">Quay lại</a>
         </div>
     </form>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 </div>
 @endsection

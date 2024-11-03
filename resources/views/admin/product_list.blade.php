@@ -45,7 +45,7 @@
                 <td>{{ $item->id }}</td>
                 <td>{{ $item->name }}</td>
                 <td>
-                    <img src="{{ asset('img/' . $item->img) }}" alt="" style="width: 100px; height: auto;">
+                <img src="{{ asset('img/' . $item->img) }}" alt="" style="width: 100px; height: auto;">
                 </td>
                 <td>{{ number_format($item->price, 0, '.', ',') }}đ</td>
                 <td>{{ number_format($item->sale_price, 0, '.', ',') }}đ</td>

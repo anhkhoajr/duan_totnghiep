@@ -5,32 +5,36 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Booking extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_id', // Fixed from 'users_id' to 'user_id'
-        'category_id',
-        'name',
-        'img',
-        'description',
-        'sale_price',
-        'price',
+        'users_id',
+        'table_id',
+        'booking_date',
+        'booking_time',
+        'number_of_guests',
+        'payment_method',
+        'payment_date',
+        'booking_status',
+        'order_status',
     ];
-
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
+    
+    public function table()
+    {
+        return $this->belongsTo(Table::class);
+    }
+    
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
     }
+    
 }
+

@@ -2,7 +2,7 @@
 
 
 namespace App\Http\Controllers\Admin;
-
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
@@ -16,13 +16,17 @@ class AdminProductsController extends Controller
     public function products(Request $request)
     {
         $search = $request->input('search');
+    
+        // Ensure relationships `user` and `category` are defined in the Product model.
         $products = Product::when($search, function ($query) use ($search) {
             return $query->where('name', 'like', "%{$search}%");
-        })->with(['user', 'category']) // Nạp dữ liệu liên quan
-          ->paginate(10); // Số sản phẩm trên mỗi trang (thay đổi theo nhu cầu)
+        })
+        ->with(['user', 'category']) // Ensure these relationships are defined
+        ->paginate(10); // Number of products per page
     
         return view('admin.product_list', compact('products'));
     }
+    
     
     // Hiển thị form thêm sản phẩm
     public function create()
@@ -35,11 +39,12 @@ class AdminProductsController extends Controller
     
 
     // Thêm sản phẩm mới
+    
     public function store(Request $request) {
         $request->validate([
             'name' => 'required|string|max:255',
             'img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'categories_id' => 'required|exists:categories,id',
+            'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric',
             'sale_price' => 'nullable|numeric',
             'description' => 'nullable|string', // Cho phép description có thể NULL
@@ -48,11 +53,11 @@ class AdminProductsController extends Controller
         // Logic lưu sản phẩm vào cơ sở dữ liệu
         $product = new Product();
         $product->name = $request->name;
-        $product->categories_id = $request->categories_id;
+        $product->category_id = $request->category_id;
         $product->price = $request->price;
         $product->sale_price = $request->sale_price; // Gán giá trị sale_price
         $product->description = $request->description; // Gán giá trị description (có thể NULL)
-        $product->users_id = auth()->id();
+        $product->user_id = auth()->id();
     
         // Xử lý ảnh sản phẩm
         if ($request->hasFile('img')) {
@@ -68,7 +73,7 @@ class AdminProductsController extends Controller
     }
     
     
-
+    
     // Hiển thị form chỉnh sửa sản phẩm
     public function edit($id)
     {
@@ -88,7 +93,7 @@ class AdminProductsController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'img' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'categories_id' => 'required|exists:categories,id',
+            'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric', // Đảm bảo giá trị này là số
             'sale_price' => 'nullable|numeric', // Đảm bảo giá trị này có thể là số hoặc null
             'description' => 'nullable|string',
@@ -96,7 +101,7 @@ class AdminProductsController extends Controller
     
         $product = Product::findOrFail($id);
         $product->name = $request->name;
-        $product->categories_id = $request->categories_id;
+        $product->category_id = $request->category_id;
     
         // Chuyển đổi giá trị từ chuỗi sang số
         $product->price = (float) preg_replace('/[^\d.]/', '', $request->price);

@@ -13,9 +13,5 @@ class AdminController extends Controller
         return view('admin.home');
     }
 
-    public function orders()
-    {
-        // Logic cho trang đơn hàng
-        return view('admin.orders');
-    }
+
 }
