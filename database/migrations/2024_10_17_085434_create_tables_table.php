@@ -13,11 +13,10 @@ return new class extends Migration
 public function up()
 {
     Schema::create('tables', function (Blueprint $table) {
-        $table->engine = 'InnoDB';  // Đảm bảo sử dụng engine InnoDB
-        $table->id();  // Tạo khóa chính tự động (bigInteger)
+        $table->id(); // PK
         $table->string('type');
         $table->integer('capacity');
-        $table->string('status');
+        $table->string('status'); // e.g., available, booked
         $table->timestamps();
     });
 }
@@ -26,5 +25,6 @@ public function down()
 {
     Schema::dropIfExists('tables');
 }
+
 
 };

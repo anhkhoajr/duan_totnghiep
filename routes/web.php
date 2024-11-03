@@ -11,7 +11,9 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminProductsController;
 use App\Http\Controllers\Admin\AdminCategoriesController;
 use App\Http\Controllers\Admin\AdminUsersController;
-
+use App\Http\Controllers\Admin\AdminTablesController;
+use App\Http\Controllers\Admin\AdminBookingsController;
+use App\Http\Controllers\Admin\AdminOrdersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +72,23 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.check'], function () {
     Route::get('/users/{id}/edit', [AdminUsersController::class, 'edit'])->name('admin.users.edit'); // Sửa người dùng
     Route::put('/users/{id}', [AdminUsersController::class, 'update'])->name('admin.users.update'); // Cập nhật người dùng
     Route::delete('/users/{id}', [AdminUsersController::class, 'destroy'])->name('admin.users.destroy'); // Xóa người dùng
+
+    // Routes cho đặt bàn
+    Route::get('/tables', [AdminTablesController::class, 'index'])->name('admin.tables.index');          // Danh sách bàn
+    Route::get('/tables/create', [AdminTablesController::class, 'create'])->name('admin.tables.create');  // Thêm bàn mới
+    Route::post('/tables', [AdminTablesController::class, 'store'])->name('admin.tables.store');          // Xử lý thêm bàn
+    Route::get('/tables/{id}/edit', [AdminTablesController::class, 'edit'])->name('admin.tables.edit');   // Sửa thông tin bàn
+    Route::put('/tables/{id}', [AdminTablesController::class, 'update'])->name('admin.tables.update');    // Cập nhật thông tin bàn
+    Route::delete('/tables/{id}', [AdminTablesController::class, 'destroy'])->name('admin.tables.destroy'); // Xóa bàn
+    // Trong web.php
+    Route::get('/table/{id}/details', [AdminTablesController::class, 'showDetails'])->name('table.details');
+
+    // Route lưu đơn hàng
+    Route::get('orders/create', [AdminOrdersController::class, 'create'])->name('orders.create');
+    Route::post('/bookings/{booking}/order', [AdminOrdersController::class, 'store'])->name('bookings.order.store');
+    Route::post('/orders', [AdminOrdersController::class, 'store'])->name('orders.store');
+
+    // end
 });
 
 

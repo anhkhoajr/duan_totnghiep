@@ -1,84 +1,42 @@
-@extends('admin.layout')
-@section('title','Admin')
+@extends('layoutAdmin.layout')
+
 @section('content')
-<div class="main-content">
-    <h3 class="title-page">
-        Sản phẩm
-    </h3>
-    <div class="d-flex justify-content-start">
-        <form class="form-search" action="{{ route('productlist') }}">
-            <fieldset class="name">
-                <input type="text" placeholder="Tìm kiếm..." name="search" tabindex="2" value="{{ request()->query('search') }}" aria-required="true" required>
-            </fieldset>
-
-        </form>
-    </div>
-    @if(session('success'))
-    <div id="successMessage" class="alert alert-success" role="alert">
-        {{ session('success') }}
-    </div>
-    @endif
-    <table id="example" class="table table-striped" style="width:100%">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>email</th>
-                <th>phone</th>
-                <th>address</th>
-                <th>status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($orders as $item)
-            <tr>
-                <td>{{$item->id}}</td>
-                <td><a class="text-dark" href="{{ route('orderdetails', $item->id) }}">{{ $item->user_name }}</a></td>
-                <td>{{$item->user_email}}</td>
-                <td>{{$item->user_phone}}</td>
-                <td>{{$item->user_address}}</td>
-                <td>{{$item->user_address}}</td>
-                <td>
-                    <form action="{{ route('updateStatus', $item->id) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <select name="status" onchange="this.form.submit()">
-                            <option value="pending" {{ $item->status == 'pending' ? 'selected' : '' }}>đang chờ xử lý</option>
-                            <option value="prepare" {{ $item->status == 'prepare' ? 'selected' : '' }}>chuẩn bị</option>
-                            <option value="shipping" {{ $item->status == 'shipping' ? 'selected' : '' }}>vận chuyển</option>
-                            <option value="success" {{ $item->status == 'success' ? 'selected' : '' }}>thành công</option>
-                            <option value="cancel" {{ $item->status == 'cancel' ? 'selected' : '' }}>hủy</option>
-                        </select>
-                    </form>
-                </td>
-                <td>
-                    <form action="{{ route('deleteOrder', $item->id) }}" method="POST" style="display:inline-block;" class="btn btn-danger">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-danger" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này không?');">Delete</button>
-                    </form>
-
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-        <tfoot>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>img</th>
-                <th>price</th>
-                <th>Start date</th>
-                <th>Sửa/Xóa</th>
-            </tr>
-        </tfoot>
-        </tfoot>
-    </table>
+<div class="container mt-4">
+    <h1 class="mb-4">Thêm món ăn cho bàn: {{ $booking->id }}</h1>
+    <!-- Hiển thị danh mục sản phẩm -->
+    <h2 class="mt-4">Danh mục sản phẩm</h2>
+    <ul class="list-group">
+        @foreach ($categories as $category)
+            <li class="list-group-item">
+                <div class="d-flex justify-content-between align-items-center">
+                    <strong>{{ $category->name }}</strong>
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseCategory{{ $category->id }}" aria-expanded="false" aria-controls="collapseCategory{{ $category->id }}">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="collapse" id="collapseCategory{{ $category->id }}">
+                    <ul class="list-group mt-2">
+                        @foreach ($products->where('category_id', $category->id) as $product)
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    {{ $product->name }} - ${{ number_format($product->price) }}
+                                </div>
+                                <!-- Form để thêm sản phẩm vào đơn hàng -->
+                                <form action="{{ route('bookings.order.store', ['booking' => $booking->id]) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="number" name="quantity" class="form-control d-inline" min="1" value="1" style="width: 60px;" required>
+                                    <button type="submit" class="btn btn-primary">Thêm vào đơn</button>
+                                </form>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </li>
+        @endforeach
+    </ul>
 </div>
-<script>
-    // Hàm ẩn thông báo sau 3 giây
-    setTimeout(function() {
-        document.getElementById('successMessage').style.display = 'none';
-    }, 2000); // 3000 milliseconds = 3 seconds
-</script>
+
+<!-- Thêm Font Awesome cho icon -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 @endsection

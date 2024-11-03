@@ -5,7 +5,7 @@
 <div class="main-content">
     <h3 class="title-page">Danh Mục</h3>
     <div class="d-flex justify-content-end">
-        <a href="{{ route('admin.addproduct') }}" class="btn btn-primary mb-2">Thêm sản phẩm</a>
+        <a href="{{ route('admin.addcategory') }}" class="btn btn-primary mb-2">Thêm danh mục</a>
     </div>
     
     <table id="example" class="table table-striped" style="width:100%">

@@ -20,7 +20,6 @@ class User extends Authenticatable
         'email',
         'password',
     ];
-
     /**
      * Các thuộc tính bị ẩn khi chuyển thành mảng hoặc JSON.
      *
@@ -30,13 +29,26 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     /**
      * Các thuộc tính cần thay đổi kiểu.
      *
-     * @var array<string, string>
+     * @var array<string, string>   
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function bookings()
+{
+    return $this->hasMany(Booking::class);
+}
+
+    public function isReserved()
+    {
+        // Kiểm tra xem có booking nào cho bàn này không
+        return $this->bookings()->where('booking_status', 'reserved')->exists();
+    }
 }

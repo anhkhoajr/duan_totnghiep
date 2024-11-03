@@ -18,11 +18,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('phone')->nullable();
-            $table->string('role')->default('user'); // role: user, admin, etc.
+            $table->string('role')->default('user'); // user, admin, etc.
             $table->timestamps();
         });
     }
-
+    
     public function down()
     {
         Schema::dropIfExists('users');
