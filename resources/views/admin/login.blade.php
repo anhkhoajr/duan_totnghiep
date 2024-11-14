@@ -61,7 +61,18 @@
 
 <body>
 
+
     <div class="login-container">
+        @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+        @endif
+        @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+        @endif
         <h3>Admin Login</h3>
         <form method="POST" action="{{ route('admin.login.submit') }}">
             @csrf

@@ -16,6 +16,9 @@ public function up()
         $table->id(); // PK
         $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // FK
         $table->foreignId('table_id')->constrained('tables')->onDelete('cascade'); // FK
+        $table->string('name');
+        $table->string('phone');
+        $table->string('message');
         $table->date('booking_date');
         $table->time('booking_time');
         $table->integer('number_of_guests');

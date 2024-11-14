@@ -16,14 +16,21 @@ class OrderItem extends Model
         'price',
     ];
 
-    public function booking()
+    public function table()
     {
-        return $this->belongsTo(Booking::class);
+        return $this->belongsTo(Table::class);
     }
-    
+
+    // Mối quan hệ với bảng `products`
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    // Mối quan hệ với bảng `bookings` (nếu cần, giả sử một đơn hàng có thể liên quan đến một đặt chỗ)
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
     }
     
 }

@@ -12,6 +12,7 @@
             <p><strong>Loại bàn:</strong> {{ $table->type }}</p>
             <p><strong>Số lượng:</strong> {{ $table->capacity }}</p>
             <p><strong>Trạng thái:</strong> {{ $table->status }}</p>
+            <p><strong>Thời gian đặt:</strong> {{ $table->created_at->format('H:i:s : d/m/Y ') }}</p>
         </div>
     </div>
 
@@ -28,7 +29,9 @@
         </div>
         <div class="card-body">
             <p><strong>Đặt bởi:</strong> {{ $booking->user->name }}</p>
-            <p><strong>Ngày:</strong> {{ $booking->booking_date }}</p>
+            <p><strong>Name người nhận bàn:</strong> {{ $booking->name }}</p>
+            <p><strong>Phone Người Nhận bàn:</strong> {{ $booking->phone }}</p>
+            <p><strong>Ngày:</strong> {{ \Carbon\Carbon::parse($booking->booking_date)->format('d/m/Y') }}</p>
             <p><strong>Thời gian:</strong> {{ $booking->booking_time }}</p>
             <p><strong>Số lượng khách:</strong> {{ $booking->number_of_guests }}</p>
             <p><strong>Phương thức thanh toán:</strong> {{ $booking->payment_method }}</p>

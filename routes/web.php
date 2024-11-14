@@ -5,7 +5,12 @@ use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\ProductsController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\UserController;
-
+use App\Http\Controllers\User\TableController;
+use App\Http\Controllers\User\BlogController;
+use App\Http\Controllers\User\ContactController;
+use App\Http\Controllers\User\BookingController;
+use App\Http\Controllers\User\OrderItemController;
+use App\Http\Controllers\User\PaymentController;
 //admin
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminProductsController;
@@ -26,10 +31,26 @@ use App\Http\Controllers\Admin\AdminOrdersController;
 |
 */
 // routes/web.php
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/menus', [ProductsController::class, 'showMenu'])->name('users.menus');
-Route::get('/chitiet', [ProductsController::class, 'chitiet'])->name('users.chitiet');
-Route::get('/cart', [CartController::class, 'cart'])->name('users.giohang');
+Route::group([], function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/menus', [ProductsController::class, 'showMenu'])->name('users.menus');
+    Route::get('/chitiet', [ProductsController::class, 'chitiet'])->name('users.chitiet');
+    Route::get('/table', [TableController::class, 'table'])->name('users.table');
+
+    Route::get('/dat-ban', [BookingController::class, 'create'])->name('datBan.create');
+    Route::post('/dat-ban', [BookingController::class, 'store'])->name('datBan.store');
+
+    Route::get('/dat-mon/{booking}', [OrderItemController::class, 'create'])->name('datMon.create');
+    Route::post('/dat-mon/{booking}', [OrderItemController::class, 'store'])->name('datMon.store');
+
+    Route::get('payment/{bookingId}', [PaymentController::class, 'show'])->name('payment.page');
+    Route::post('payment/{bookingId}/confirm', [PaymentController::class, 'confirm'])->name('payment.confirm');
+
+    Route::get('/blog', [BlogController::class, 'blog'])->name('users.blog');
+    Route::get('/contact', [ContactController::class, 'contact'])->name('users.contact');
+});
+
+
 
 // đăng ký
 Route::get('register', [UserController::class, 'showRegisterForm'])->name('admin.register');
