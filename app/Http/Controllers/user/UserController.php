@@ -19,6 +19,7 @@ class UserController extends Controller
     // Xử lý đăng ký
     public function register(Request $request)
     {
+        
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -80,6 +81,6 @@ class UserController extends Controller
     public function logout(Request $request)
     {
         Auth::logout(); // Đăng xuất người dùng
-        return redirect()->route('admin.login'); // Chuyển hướng về trang đăng nhập
+        return redirect()->route('home'); // Chuyển hướng về trang đăng nhập
     }
 }

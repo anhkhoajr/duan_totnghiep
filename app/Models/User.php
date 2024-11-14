@@ -19,6 +19,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
     ];
     /**
      * Các thuộc tính bị ẩn khi chuyển thành mảng hoặc JSON.

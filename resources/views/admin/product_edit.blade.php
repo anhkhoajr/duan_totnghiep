@@ -6,23 +6,26 @@
     <form action="{{ route('admin.update', $product->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-        
+
         <div class="form-group">
             <label for="exampleInputFile">Ảnh sản phẩm</label>
             <div class="custom-file">
-                <input type="file" name="img" class="custom-file-input" id="img">
-                <label class="custom-file-label" for="img">Chọn tệp</label>
+                <input type="file" name="img" class="custom-file-input" id="img" onchange="updateFileLabelAndPreview()">
+                <label class="custom-file-label" for="img" id="file-label">Chọn tệp</label>
             </div>
             @if ($product->img)
-                <img src="{{ asset('img/' . $product->img) }}" alt="{{ $product->name }}" class="mt-2" style="max-width: 200px;">
+            <img src="{{ asset('img/' . $product->img) }}" alt="{{ $product->name }}" class="mt-2" id="preview-img" style="max-width: 200px;">
+            @else
+            <img src="#" alt="Preview" class="mt-2" id="preview-img" style="max-width: 200px; display: none;">
             @endif
         </div>
+
 
         <div class="form-group">
             <label for="name">Tên sản phẩm:</label>
             <input type="text" class="form-control" name="name" id="name" value="{{ old('name', $product->name) }}" required>
             @if ($errors->has('name'))
-                <span class="text-danger">{{ $errors->first('name') }}</span>
+            <span class="text-danger">{{ $errors->first('name') }}</span>
             @endif
         </div>
 
@@ -30,11 +33,11 @@
             <label for="categories">Danh mục:</label>
             <select class="form-select" name="category_id" id="categories_id" required>
                 @foreach ($categories as $category)
-                    <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                 @endforeach
             </select>
             @if ($errors->has('category_id'))
-                <span class="text-danger">{{ $errors->first('category_id') }}</span>
+            <span class="text-danger">{{ $errors->first('category_id') }}</span>
             @endif
         </div>
 
@@ -46,7 +49,7 @@
                 </div>
                 <input type="text" name="price" id="price" class="form-control" value="{{ old('price', number_format($product->price, 0, '.', ',')) }}" required>
                 @if ($errors->has('price'))
-                    <span class="text-danger">{{ $errors->first('price') }}</span>
+                <span class="text-danger">{{ $errors->first('price') }}</span>
                 @endif
             </div>
         </div>
@@ -59,7 +62,7 @@
                 </div>
                 <input type="text" name="sale_price" id="sale_price" class="form-control" value="{{ old('sale_price', number_format($product->sale_price, 0, '.', ',')) }}">
                 @if ($errors->has('sale_price'))
-                    <span class="text-danger">{{ $errors->first('sale_price') }}</span>
+                <span class="text-danger">{{ $errors->first('sale_price') }}</span>
                 @endif
             </div>
         </div>
@@ -68,7 +71,7 @@
             <label>Mô tả ngắn</label>
             <textarea class="form-control" name="description" rows="3" placeholder="Nhập 1 đoạn mô tả ngắn về sản phẩm" style="height: 78px;">{{ old('description', $product->description) }}</textarea>
             @if ($errors->has('description'))
-                <span class="text-danger">{{ $errors->first('description') }}</span>
+            <span class="text-danger">{{ $errors->first('description') }}</span>
             @endif
         </div>
 
@@ -77,15 +80,37 @@
             <a href="{{ route('admin.productlist') }}" class="btn btn-secondary">Quay lại</a>
         </div>
     </form>
+    <script>
+        function updateFileLabelAndPreview() {
+            const fileInput = document.getElementById('img');
+            const label = document.getElementById('file-label');
+            const previewImg = document.getElementById('preview-img');
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    previewImg.style.display = 'block'; // Hiển thị ảnh
+                };
+
+                reader.readAsDataURL(fileInput.files[0]); // Đọc tệp và tạo URL
+                label.textContent = 'Đã thay ảnh'; // Cập nhật nhãn
+            } else {
+                previewImg.style.display = 'none'; // Ẩn ảnh nếu không có tệp
+                label.textContent = 'Chọn tệp'; // Khôi phục nhãn cũ
+            }
+        }
+    </script>
 
     @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
     @endif
 </div>
 @endsection

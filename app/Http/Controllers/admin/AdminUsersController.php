@@ -20,8 +20,7 @@ class AdminUsersController extends Controller
         })->paginate(10); // Phân trang với 10 người dùng mỗi trang
     
         return view('admin.user_list', compact('users', 'search')); // Trả về view danh sách người dùng cùng với từ khóa tìm kiếm
-    }
-    
+    }  
 
     // Hiển thị form thêm người dùng
     public function create()
