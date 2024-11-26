@@ -5,14 +5,15 @@
 | Create The Application
 |--------------------------------------------------------------------------
 |
-| The first thing we will do is create a new Laravel application instance
+| The first thing we will do is create a new Laravel application instance,
 | which serves as the "glue" for all the components of Laravel, and is
 | the IoC container for the system binding all of the various parts.
 |
 */
 
+// Create the application instance, using the APP_BASE_PATH environment variable or defaulting to the parent directory
 $app = new Illuminate\Foundation\Application(
-    $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
+    isset($_ENV['APP_BASE_PATH']) ? $_ENV['APP_BASE_PATH'] : dirname(__DIR__)
 );
 
 /*
@@ -26,16 +27,19 @@ $app = new Illuminate\Foundation\Application(
 |
 */
 
+// Bind the HTTP kernel to the container
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
     App\Http\Kernel::class
 );
 
+// Bind the Console kernel to the container
 $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
     App\Console\Kernel::class
 );
 
+// Bind the Exception handler to the container
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
     App\Exceptions\Handler::class
@@ -52,4 +56,5 @@ $app->singleton(
 |
 */
 
+// Return the application instance
 return $app;
