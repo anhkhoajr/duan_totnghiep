@@ -1,24 +1,30 @@
 <?php
 //user
+use Inertia\Inertia;
+use App\Models\Booking;
+use App\Models\Product;
+use App\Models\Category;
+use App\Models\OrderItem;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\User\HomeController;
-use App\Http\Controllers\User\ProductsController;
-use App\Http\Controllers\User\CartController;
-use App\Http\Controllers\User\UserController;
-use App\Http\Controllers\User\TableController;
 use App\Http\Controllers\User\BlogController;
-use App\Http\Controllers\User\ContactController;
-use App\Http\Controllers\User\BookingController;
-use App\Http\Controllers\User\OrderItemController;
-use App\Http\Controllers\User\PaymentController;
+use App\Http\Controllers\User\CartController;
+use App\Http\Controllers\User\HomeController;
+use App\Http\Controllers\User\UserController;
 //admin
+use App\Http\Controllers\User\TableController;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\AdminProductsController;
-use App\Http\Controllers\Admin\AdminCategoriesController;
+use App\Http\Controllers\User\BookingController;
+use App\Http\Controllers\User\ContactController;
+use App\Http\Controllers\User\PaymentController;
+use App\Http\Controllers\User\ProductsController;
+use App\Http\Controllers\User\OrderItemController;
 use App\Http\Controllers\Admin\AdminUsersController;
+use App\Http\Controllers\Admin\AdminOrdersController;
 use App\Http\Controllers\Admin\AdminTablesController;
 use App\Http\Controllers\Admin\AdminBookingsController;
-use App\Http\Controllers\Admin\AdminOrdersController;
+use App\Http\Controllers\Admin\AdminProductsController;
+use App\Http\Controllers\Admin\AdminCategoriesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,37 +36,101 @@ use App\Http\Controllers\Admin\AdminOrdersController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-// routes/web.php
-Route::group([], function () {
-    Route::get('/', [HomeController::class, 'index'])->name('home');
-    Route::get('/menus', [ProductsController::class, 'showMenu'])->name('users.menus');
-    Route::get('/chitiet', [ProductsController::class, 'chitiet'])->name('users.chitiet');
-    Route::get('/table', [TableController::class, 'table'])->name('users.table');
 
-    Route::get('/dat-ban', [BookingController::class, 'create'])->name('datBan.create');
-    Route::post('/dat-ban', [BookingController::class, 'store'])->name('datBan.store');
+// Router all fix ở đây nhé
+Route::get('/register', function () {
+    return Inertia::render('Register');
+})->name('admin.register');
 
-    Route::get('/dat-mon/{booking}', [OrderItemController::class, 'create'])->name('datMon.create');
-    Route::post('/dat-mon/{booking}', [OrderItemController::class, 'store'])->name('datMon.store');
+Route::get('/login', function () {
+    return Inertia::render('Login');
+})->name('admin.login');
 
-    Route::get('payment/{bookingId}', [PaymentController::class, 'show'])->name('payment.page');
-    Route::post('payment/{bookingId}/confirm', [PaymentController::class, 'confirm'])->name('payment.confirm');
+Route::get('/', function () {
+    return Inertia::render('Home');
+})->name('home');
 
-    Route::get('/blog', [BlogController::class, 'blog'])->name('users.blog');
-    Route::get('/contact', [ContactController::class, 'contact'])->name('users.contact');
+
+Route::get('/menu', function () {
+    return Inertia::render('Menu');
+})->name('menu');
+
+Route::get('/details/{id}', function ($id) {
+    $product = Product::with('category.products')->find($id);
+
+    if (!$product) {
+        abort(404, 'Product not found');
+    }
+
+    return Inertia::render('Details', [
+        'product' => $product,
+        'relatedProducts' => $product->category->products->where('id', '!=', $id)->take(4), // Lấy sản phẩm liên quan
+    ]);
+})->name('details');
+
+
+Route::get('/payment', function () {
+    return Inertia::render('Payment');
+})->name('payment');
+
+Route::get('/contact', function () {
+    return Inertia::render('Contact');
+})->name('contact');
+
+
+Route::get('/blog', function () {
+    return Inertia::render('Blog');
+})->name('blog');
+
+Route::get('/logout', [UserController::class, 'logout'])->name('logout');
+
+Route::get('/booktable', function () {
+    return Inertia::render('BookTable');
+})->name('booktable');
+
+
+Route::get('/cart', function () {
+    return Inertia::render('Cart');
+})->name('cart');
+
+Route::get('/products', function () {
+    $products = Product::all(); // Lấy tất cả sản phẩm
+    $categories = Category::all(); // Lấy tất cả danh mục
+
+    return Inertia::render('Products', [
+        'products' => $products,
+        'categories' => $categories,
+    ]);
+})->name('products');
+
+Route::get('/checkout', function () {
+    return Inertia::render('Checkout');
+})->name('checkout');
+
+Route::get('api/menu', function () {
+    $categories = Category::with('products')->get();
+    return response()->json($categories);
 });
 
 
+Route::get('/payment/{bookingId}', function ($bookingId) {
+    $booking = Booking::findOrFail($bookingId);
+    $orderItems = OrderItem::where('booking_id', $bookingId)->get();
+    $totalAmount = $orderItems->sum(function ($item) {
+        return $item->quantity * $item->price;
+    });
+    return Inertia::render('Payment', compact('booking', 'orderItems', 'totalAmount'));
+})->name('payment');
+
 
 // đăng ký
-Route::get('register', [UserController::class, 'showRegisterForm'])->name('admin.register');
+// Route::get('register', [UserController::class, 'showRegisterForm'])->name('admin.register');
 Route::post('register', [UserController::class, 'register'])->name('admin.register.submit');
 // Route cho trang login admin (không sử dụng middleware 'auth' vì người dùng chưa đăng nhập)
-Route::get('/login', [UserController::class, 'showLoginForm'])->name('admin.login');
+// Route::get('/login', [UserController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/login', [UserController::class, 'login'])->name('admin.login.submit');
 
 // Route cho đăng xuất (đặt trong nhóm có middleware 'auth')
-Route::post('/logout', [UserController::class, 'logout'])->name('admin.logout');
 
 // Các route của trang admin (được bảo vệ bởi middleware 'auth')
 
@@ -111,7 +181,3 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.check'], function () {
 
     // end
 });
-
-
-
-// Route::get('/admin', [AdminController::class, 'index'])->name('admin.home');

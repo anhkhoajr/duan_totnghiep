@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Inertia\Inertia;
 use App\Models\Product;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
@@ -17,8 +18,9 @@ class HomeController extends Controller
 
     public function index()
     {
-        $product = Product::orderBy('created_at', 'desc')->take(5)->get();
-        return view('users.home', compact('product')); // Trả về view 'home', view này sẽ sử dụng layout
+        $products= Product::orderBy('created_at', 'desc')->take(5)->get();
+            return Inertia::render('Home',["products"=>$products]);
+      
     }
 
 }
