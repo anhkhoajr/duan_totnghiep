@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\OrderItem;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function orders()
     {
-        // Logic cho trang chủ admin
-        return view('admin.home');
+        $order = OrderItem::all();
+        return view('admin.order_details', compact('order'));
     }
-
-
 }

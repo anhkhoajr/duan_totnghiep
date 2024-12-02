@@ -13,7 +13,9 @@ class UserController extends Controller
 {
     public function showRegisterForm()
     {
-        return view('admin.register');
+
+         return view('admin.register');
+      
     }
 
     // Xử lý đăng ký
@@ -38,6 +40,7 @@ class UserController extends Controller
         ]);
 
         return redirect()->route('admin.login')->with('success', 'Registration successful. Please login.');
+        
     }
 
     // Hiển thị form đăng nhập

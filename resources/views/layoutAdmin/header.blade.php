@@ -6,7 +6,7 @@
             </a>
         </li>
         <li>
-            <a class="text-dark" href="{{ route('admin.orders') }}">
+            <a class="text-dark" href="{{ route('admin.orders.index') }}">
                 <i class="fa-solid fa-cart-shopping ico-side"></i> Quản lý đơn hàng
             </a>
         </li>

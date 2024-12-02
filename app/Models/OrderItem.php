@@ -8,14 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class OrderItem extends Model
 {
     use HasFactory;
-
+    protected $table = 'order_items';
     protected $fillable = [
+        'user_id',
         'booking_id',
-        'product_id',  // Đổi từ products_id thành product_id
+        'product_id',
         'quantity',
         'price',
+        'status',
     ];
-
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     public function table()
     {
         return $this->belongsTo(Table::class);
@@ -32,6 +37,4 @@ class OrderItem extends Model
     {
         return $this->belongsTo(Booking::class);
     }
-    
 }
-
